@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>env-rosetta · same Wordle env, 4 RL frameworks, 4 islo.dev sandboxes</title>
+  <meta name="description" content="Adithya's Wordle env from RL_Envs_101, deployed across OpenEnv / ORS / NeMo Gym / Verifiers — each running in its own islo.dev sandbox.">
+  <meta property="og:title" content="env-rosetta — Wordle env across 4 RL frameworks on islo.dev">
+  <meta property="og:description" content="Same Wordle env, 4 framework dialects, 4 parallel islo.dev sandboxes. Side-by-side rosetta stone.">
+  <meta property="og:url" content="https://zozo123.github.io/env-rosetta-page/">
+  <meta property="og:image" content="https://zozo123.github.io/env-rosetta-page/assets/og.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="title">
+      <span class="lead">env-rosetta</span>
+      <span class="sub">same Wordle env · 4 RL frameworks · 4 <b>islo.dev</b> sandboxes — side by side</span>
+    </div>
+    <nav>
+      <a href="https://github.com/zozo123/env-rosetta" target="_blank">GitHub</a>
+      <a href="https://github.com/adithya-s-k/RL_Envs_101" target="_blank">RL_Envs_101</a>
+      <a href="https://github.com/zozo123/unity-loop" target="_blank">unity-loop</a>
+      <a href="https://islo.dev" target="_blank">islo.dev</a>
+    </nav>
+  </header>
+
+  <section class="intro">
+    <p><b>The setup:</b> <a href="https://x.com/adithya_s_k" target="_blank">@adithya_s_k</a> reimplemented the same Wordle env across <a href="https://github.com/adithya-s-k/RL_Envs_101" target="_blank">six RL frameworks</a> as a Rosetta stone. His reference deployments live on HuggingFace Spaces. We took four of those frameworks (OpenEnv, ORS, NeMo Gym, Verifiers) and ran each in <b>its own islo.dev sandbox</b> — fresh, cold, parallel, one-line provision. Hit any card's "live URL" to talk to the server directly.</p>
+  </section>
+
+  <section class="grid" id="grid">
+    <div class="placeholder">loading cards…</div>
+  </section>
+
+  <section class="explain">
+    <h2>why per-sandbox</h2>
+    <p>HF Spaces is fine for static demos. But if you want to run K parallel rollouts, do per-trial isolation, or `ssh` in to debug a hung env — that's what cold per-rollout sandboxes are for. Same env code, swap the deployment target. Adithya's `<a href="https://github.com/adithya-s-k/RL_Envs_101" target="_blank">Dockerfile</a>` builds on HF Spaces, here it builds inside <code>islo use rosetta-&lt;fw&gt; --source github://adithya-s-k/RL_Envs_101 -- bash -c '…uv pip install -e . && server'</code>, share port, done.</p>
+
+    <h2>provision in one line</h2>
+    <pre><code>islo use rosetta-openenv \
+  --source github://adithya-s-k/RL_Envs_101 \
+  -- bash -c 'cd envs/wordle_env/openenv && uv venv .venv && . .venv/bin/activate \
+              && uv pip install -e . \
+              && setsid -f uvicorn server.app:app --host 0.0.0.0 --port 8080'
+islo share rosetta-openenv 8080
+# https://&lt;id&gt;.share.islo.dev  ← live</code></pre>
+
+    <h2>not yet</h2>
+    <p>Adithya's <b>Jupyter agent</b> env (real Python code-exec) hard-depends on <code>e2b-code-interpreter</code>. Swapping E2B → islo isn't mechanical — it's writing an <code>IsloSandbox</code> class that matches <code>E2BSandbox.run_code</code>, plumbed through <code>envs/jupyter_env/&lt;framework&gt;/e2b_sandbox.py</code> in all 4 frameworks. That's the real "islo replaces E2B" story and it's Tier 2 — sketched in <a href="https://github.com/zozo123/env-rosetta/blob/main/docs/POST.md" target="_blank">POST.md</a>.</p>
+
+    <h2>credits</h2>
+    <ul>
+      <li>Envs & framework adapters — <a href="https://github.com/adithya-s-k/RL_Envs_101" target="_blank">@adithya-s-k</a></li>
+      <li>Sandbox infra — <a href="https://islo.dev" target="_blank">islo.dev</a></li>
+      <li>Pattern — <a href="https://github.com/zozo123/unity-loop" target="_blank">unity-loop</a> · <a href="https://github.com/zozo123/pokeloop" target="_blank">pokeloop</a> · <a href="https://github.com/zozo123/meta-harness-on-islo" target="_blank">meta-harness-on-islo</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>env-rosetta · <a href="https://github.com/zozo123/env-rosetta">github</a> · MIT</span>
+  </footer>
+
+  <script src="cards.js"></script>
+</body>
+</html>
