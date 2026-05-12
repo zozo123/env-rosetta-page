@@ -1,12 +1,20 @@
-// Pull bundled cards.json (from raw GitHub, refreshed when env-rosetta repo bumps champion).
+// Simple gallery: 4 framework cards, each showing vendor + code excerpt + sample rollout.
+// We don't display share URLs — they're short-lived; the point is the side-by-side comparison.
 const CARDS_URL = "https://raw.githubusercontent.com/zozo123/env-rosetta/main/env-rosetta-page-cards.json";
+
 const FALLBACK = [
-  {
-    framework: "openenv", name: "OpenEnv", vendor: "Meta",
-    sandbox: "rosetta-openenv", share_url: null,
-    status: "loading", color: "#3a86ff",
-    rollout: { transcript: "loading…", won: false, guesses_used: 0 },
-  },
+  { framework: "openenv",   name: "OpenEnv",   vendor: "Meta",                 color: "#8b5cf6",
+    code_excerpt_path: "envs/wordle_env/openenv/server/app.py", code_excerpt: "",
+    rollout: { transcript: "" } },
+  { framework: "ors",       name: "ORS",       vendor: "Open Reward Standard", color: "#a78bfa",
+    code_excerpt_path: "envs/wordle_env/ors/server.py", code_excerpt: "",
+    rollout: { transcript: "" } },
+  { framework: "nemo_gym",  name: "NeMo Gym",  vendor: "NVIDIA",               color: "#7c3aed",
+    code_excerpt_path: "envs/wordle_env/nemo_gym/server.py", code_excerpt: "",
+    rollout: { transcript: "" } },
+  { framework: "verifiers", name: "Verifiers", vendor: "@willccbb",            color: "#a78bfa",
+    code_excerpt_path: "envs/wordle_env/verifiers/env.py", code_excerpt: "",
+    rollout: { transcript: "" } },
 ];
 
 function esc(s) {
@@ -19,26 +27,20 @@ function colorizeTranscript(text) {
 }
 
 function renderCard(c) {
-  const isLive = c.share_url && c.status === "running";
-  const isProc = c.status === "in-process";
-  const pill = isLive ? `<span class="pill live">live · ${c.sandbox}</span>`
-              : isProc ? `<span class="pill in-process">in-process</span>`
-              : `<span class="pill warming">${esc(c.status || "warming")}${c.sandbox ? ` · ${esc(c.sandbox)}` : ""}</span>`;
-  const urlHtml = isLive
-    ? `<div class="live-url">→ <a href="${esc(c.docs_url || c.share_url)}" target="_blank">${esc(c.share_url)}</a></div>`
-    : isProc
-    ? `<div class="live-url" style="color:var(--dim)">no server — runs in-process inside the rollout</div>`
-    : `<div class="live-url" style="color:var(--dim)">share URL pending</div>`;
+  const repoPath = c.code_excerpt_path
+    ? `https://github.com/adithya-s-k/RL_Envs_101/blob/main/${c.code_excerpt_path}`
+    : null;
+  const fileLink = repoPath
+    ? `<a href="${esc(repoPath)}" target="_blank">${esc(c.code_excerpt_path)}</a>`
+    : esc(c.code_excerpt_path || "");
 
   return `
-    <article class="card" style="--card-accent: ${esc(c.color)};">
+    <article class="card" style="--card-accent: ${esc(c.color || "#8b5cf6")};">
       <div class="head">
         <div class="name">${esc(c.name)}</div>
         <div class="vendor">${esc(c.vendor)}</div>
       </div>
-      <div class="status-row">${pill}</div>
-      ${urlHtml}
-      <div class="section-label">code · ${esc(c.code_excerpt_path || "")}</div>
+      <div class="section-label">${fileLink}</div>
       <pre class="code-excerpt"><code>${esc(c.code_excerpt || "")}</code></pre>
       <div class="section-label">sample rollout</div>
       <div class="transcript">${colorizeTranscript(c.rollout?.transcript || "")}</div>
