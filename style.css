@@ -119,6 +119,12 @@ header nav a:hover { color: var(--ink); }
   font-family: var(--font-mono);
   margin: 0;
 }
+.movie-note {
+  max-width: 480px;
+  text-align: center;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
 
 .intro {
   padding: 28px 36px 8px;
