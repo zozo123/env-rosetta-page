@@ -1,6 +1,6 @@
 # env-rosetta-page
 
-Project page for [zozo123/env-rosetta](https://github.com/zozo123/env-rosetta) — same Wordle env across 4 RL frameworks on islo.dev sandboxes.
+Project page (demo) for [zozo123/env-rosetta](https://github.com/zozo123/env-rosetta), by Yossi Eliaz: [@adithya-s-k](https://github.com/adithya-s-k)'s Wordle env from [RL_Envs_101](https://github.com/adithya-s-k/RL_Envs_101) shown in four RL frameworks side by side, hosted on islo.dev sandboxes. Rollout transcripts are scripted.
 
 Live: https://zozo123.github.io/env-rosetta-page/
 

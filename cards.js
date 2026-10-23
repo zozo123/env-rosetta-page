@@ -26,9 +26,12 @@ function colorizeTranscript(text) {
   return esc(text).replace(/WIN[^\n]*/, m => `<span class="ok">${m}</span>`);
 }
 
+// Pinned to the upstream commit the demo ran against (May 2026); upstream main has since moved these files.
+const UPSTREAM_REF = "41c04630fbb3aba001c9a6ab656893e6ac2a0961";
+
 function renderCard(c) {
   const repoPath = c.code_excerpt_path
-    ? `https://github.com/adithya-s-k/RL_Envs_101/blob/main/${c.code_excerpt_path}`
+    ? `https://github.com/adithya-s-k/RL_Envs_101/blob/${UPSTREAM_REF}/${c.code_excerpt_path}`
     : null;
   const fileLink = repoPath
     ? `<a href="${esc(repoPath)}" target="_blank">${esc(c.code_excerpt_path)}</a>`
@@ -42,7 +45,7 @@ function renderCard(c) {
       </div>
       <div class="section-label">${fileLink}</div>
       <pre class="code-excerpt"><code>${esc(c.code_excerpt || "")}</code></pre>
-      <div class="section-label">sample rollout</div>
+      <div class="section-label">sample rollout (scripted)</div>
       <div class="transcript">${colorizeTranscript(c.rollout?.transcript || "")}</div>
     </article>
   `;
